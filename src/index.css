@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Theme color tokens ────────────────────────────────────────────── */
+:root {
+  /* Dark (default) */
+  --gray-50: 245 247 250; --gray-100: 240 243 248; --gray-200: 231 235 243;
+  --gray-300: 156 163 175; --gray-400: 156 163 175; --gray-500: 107 114 128;
+  --gray-600: 75 85 99; --gray-700: 55 65 81; --gray-800: 31 41 55;
+  --gray-900: 17 24 39; --gray-950: 3 7 18; --white: 255 255 255;
+  --app-bg: 3 7 18;
+  --app-text: 249 250 251;
+  --panel-bg: 17 24 39;
+  --panel-bg-alpha: 17 24 39;
+  --panel-border: 31 41 55;
+  --panel-border-subtle: 31 41 55;
+  --header-bg: 17 24 39;
+  --header-border: 31 41 55;
+  --input-bg: 31 41 55;
+  --input-border: 55 65 81;
+  --muted-bg: 31 41 55;
+  --muted-bg-alpha: 31 41 55;
+  --muted-border: 55 65 81;
+  --hover-bg: 55 65 81;
+  --text-muted: 156 163 175;
+  --text-dim: 107 114 128;
+  --text-faded: 75 85 99;
+  --text-strong: 255 255 255;
+  --scrollbar-thumb: 55 65 81;
+  --scrollbar-hover: 75 85 99;
+  --accent-bg: 59 130 246;
+  --accent-bg-light: 37 99 235;
+}
+
+.light {
+  --gray-50: 248 250 252; --gray-100: 241 245 249; --gray-200: 226 232 240;
+  --gray-300: 203 213 225; --gray-400: 100 116 139; --gray-500: 100 116 139;
+  --gray-600: 71 85 105; --gray-700: 51 65 85; --gray-800: 226 232 240;
+  --gray-900: 241 245 249; --gray-950: 248 250 252; --white: 15 23 42;
+  --app-bg: 241 245 249;
+  --app-text: 15 23 42;
+  --panel-bg: 255 255 255;
+  --panel-bg-alpha: 255 255 255;
+  --panel-border: 226 232 240;
+  --panel-border-subtle: 241 245 249;
+  --header-bg: 255 255 255;
+  --header-border: 226 232 240;
+  --input-bg: 241 245 249;
+  --input-border: 203 213 225;
+  --muted-bg: 241 245 249;
+  --muted-bg-alpha: 241 245 249;
+  --muted-border: 226 232 240;
+  --hover-bg: 226 232 240;
+  --text-muted: 71 85 105;
+  --text-dim: 100 116 139;
+  --text-faded: 148 163 184;
+  --text-strong: 15 23 42;
+  --scrollbar-thumb: 203 213 225;
+  --scrollbar-hover: 148 163 184;
+  --accent-bg: 37 99 235;
+  --accent-bg-light: 29 78 216;
+}
+
+body {
+  background: rgb(var(--app-bg));
+  color: rgb(var(--app-text));
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--scrollbar-thumb));
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--scrollbar-hover));
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* Override for animations */
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Dark-mode text overrides ──────────────────────────────────────── */
+/* In dark mode, all grey text should be white for better readability. */
+/* These have lower specificity than .light overrides, so light mode is unaffected. */
+.text-gray-100 { color: rgb(255 255 255) !important; }
+.text-gray-200 { color: rgb(255 255 255) !important; }
+.text-gray-300 { color: rgb(255 255 255) !important; }
+.text-gray-400 { color: rgb(255 255 255) !important; }
+.text-gray-500 { color: rgb(255 255 255) !important; }
+.text-gray-600 { color: rgb(255 255 255) !important; }
+.text-gray-700 { color: rgb(255 255 255) !important; }
+
+/* ── Light-mode text overrides ─────────────────────────────────────── */
+/* In light mode, text-white/text-gray-XXX should resolve to readable dark values. */
+.light .text-white { color: rgb(15 23 42) !important; }
+.light .text-gray-100 { color: rgb(15 23 42) !important; }
+.light .text-gray-200 { color: rgb(15 23 42) !important; }
+.light .text-gray-300 { color: rgb(15 23 42) !important; }
+.light .text-gray-400 { color: rgb(15 23 42) !important; }
+.light .text-gray-500 { color: rgb(15 23 42) !important; }
+.light .text-gray-600 { color: rgb(15 23 42) !important; }
+.light .text-gray-700 { color: rgb(15 23 42) !important; }
+
+/* ── Light-mode background overrides ───────────────────────────────── */
+.light .bg-gray-950 { background-color: rgb(var(--gray-50)) !important; }
+.light .bg-gray-900 { background-color: rgb(var(--gray-50)) !important; }
+.light .bg-gray-900\/90 { background-color: rgb(255 255 255 / 0.95) !important; }
+.light .bg-gray-900\/60 { background-color: rgb(255 255 255 / 0.8) !important; }
+.light .bg-gray-900\/70 { background-color: rgb(255 255 255 / 0.85) !important; }
+.light .bg-gray-800\/90 { background-color: rgb(241 245 249 / 0.95) !important; }
+.light .bg-gray-800\/95 { background-color: rgb(241 245 249 / 0.98) !important; }
+.light .bg-gray-800\/60 { background-color: rgb(241 245 249 / 0.7) !important; }
+.light .bg-gray-800\/50 { background-color: rgb(241 245 249 / 0.6) !important; }
+.light .bg-gray-800\/40 { background-color: rgb(241 245 249 / 0.5) !important; }
+.light .bg-gray-800\/30 { background-color: rgb(241 245 249 / 0.4) !important; }
+.light .bg-gray-800 { background-color: rgb(var(--gray-100)) !important; }
+.light .bg-gray-700\/60 { background-color: rgb(var(--gray-200)) !important; }
+.light .bg-gray-700\/50 { background-color: rgb(var(--gray-200)) !important; }
+.light .bg-gray-700\/40 { background-color: rgb(var(--gray-200)) !important; }
+.light .bg-gray-700\/30 { background-color: rgb(var(--gray-200)) !important; }
+.light .bg-gray-700\/50 { background-color: rgb(var(--gray-200)) !important; }
+.light .bg-gray-700 { background-color: rgb(var(--gray-200)) !important; }
+.light .bg-gray-800\/40\/30 { background-color: rgb(var(--gray-200)) !important; }
+
+/* Border overrides in light mode */
+.light .border-gray-800\/50 { border-color: rgb(var(--gray-200)) !important; }
+.light .border-gray-800\/40 { border-color: rgb(var(--gray-200)) !important; }
+.light .border-gray-800\/70 { border-color: rgb(var(--gray-200)) !important; }
+.light .border-gray-800 { border-color: rgb(var(--gray-200)) !important; }
+.light .border-gray-700\/60 { border-color: rgb(var(--gray-300)) !important; }
+.light .border-gray-700\/50 { border-color: rgb(var(--gray-300)) !important; }
+.light .border-gray-700\/40 { border-color: rgb(var(--gray-300)) !important; }
+.light .border-gray-700\/30 { border-color: rgb(var(--gray-200)) !important; }
+.light .border-gray-700 { border-color: rgb(var(--gray-300)) !important; }
+.light .border-gray-600\/60 { border-color: rgb(var(--gray-300)) !important; }
+.light .border-gray-600\/50 { border-color: rgb(var(--gray-300)) !important; }
+.light .border-gray-600 { border-color: rgb(var(--gray-300)) !important; }
+
+/* Keep status badge colors vivid in both themes */
+.light .bg-red-500 { background-color: rgb(239 68 68) !important; }
+.light .bg-red-500\/20 { background-color: rgb(239 68 68 / 0.18) !important; }
+.light .bg-red-500\/15 { background-color: rgb(239 68 68 / 0.15) !important; }
+.light .bg-red-500\/10 { background-color: rgb(239 68 68 / 0.1) !important; }
+.light .bg-red-500\/5 { background-color: rgb(239 68 68 / 0.06) !important; }
+.light .bg-red-500\/\[0\.06\] { background-color: rgb(239 68 68 / 0.07) !important; }
+.light .bg-red-500\/\[0\.11\] { background-color: rgb(239 68 68 / 0.11) !important; }
+.light .bg-yellow-500\/15 { background-color: rgb(234 179 8 / 0.15) !important; }
+.light .bg-yellow-500\/\[0\.05\] { background-color: rgb(234 179 8 / 0.07) !important; }
+.light .bg-yellow-500\/\[0\.1\] { background-color: rgb(234 179 8 / 0.11) !important; }
+.light .bg-green-500\/15 { background-color: rgb(34 197 94 / 0.15) !important; }
+.light .bg-blue-500\/15 { background-color: rgb(59 130 246 / 0.15) !important; }
+.light .bg-cyan-500\/15 { background-color: rgb(6 182 212 / 0.15) !important; }
+.light .bg-orange-500\/20 { background-color: rgb(249 115 22 / 0.18) !important; }
+
+/* Text status colors remain vivid */
+.light .text-red-400 { color: rgb(220 38 38) !important; }
+.light .text-red-500 { color: rgb(220 38 38) !important; }
+.light .text-orange-400 { color: rgb(234 88 12) !important; }
+.light .text-yellow-400 { color: rgb(202 138 4) !important; }
+.light .text-yellow-500 { color: rgb(202 138 4) !important; }
+.light .text-green-400 { color: rgb(22 163 74) !important; }
+.light .text-green-500 { color: rgb(22 163 74) !important; }
+.light .text-blue-400 { color: rgb(37 99 235) !important; }
+.light .text-blue-500 { color: rgb(37 99 235) !important; }
+.light .text-cyan-300 { color: rgb(8 145 178) !important; }
+.light .text-cyan-400 { color: rgb(8 145 178) !important; }
+.light .text-red-300 { color: rgb(220 38 38) !important; }
+.light .text-orange-300 { color: rgb(234 88 12) !important; }
+
+/* Inputs in light mode */
+.light input { color: rgb(15 23 42) !important; }
+.light input::placeholder { color: rgb(148 163 184) !important; }
+.light .placeholder-gray-600::placeholder { color: rgb(148 163 184) !important; }
+
+/* Primary buttons keep white text in both themes */
+.light .bg-red-600 .text-white,
+.light .bg-red-600.text-white,
+.light .bg-blue-600 .text-white,
+.light .bg-blue-600.text-white,
+.light .bg-blue-500 .text-white,
+.light .bg-blue-500.text-white,
+.light .bg-red-500 .text-white,
+.light .bg-red-500.text-white {
+  color: rgb(255 255 255) !important;
+}
+
+/* ── Light bar animation ───────────────────────────────────────────── */
+.lightbar-flow {
+  animation: lightbar-flow 6s linear infinite;
+}
+@keyframes lightbar-flow {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Alarm flash animation for floor boxes ──────────────────────────── */
+.alarm-flash {
+  animation: alarm-flash 1.2s ease-in-out infinite;
+}
+
+@keyframes alarm-flash {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(255, 70, 104, 0.8), 0 0 12px rgba(255, 70, 104, 0.5), inset 0 0 4px rgba(255, 70, 104, 0.3);
+    border-color: rgba(255, 70, 104, 0.9);
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+  50% {
+    box-shadow: 0 0 2px rgba(255, 70, 104, 0.3), 0 0 4px rgba(255, 70, 104, 0.15), inset 0 0 1px rgba(255, 70, 104, 0.1);
+    border-color: rgba(255, 70, 104, 0.2);
+    opacity: 0.55;
+    filter: brightness(0.6);
+  }
+}
+
+/* ── Fault flash animation for floor boxes ──────────────────────────── */
+.fault-flash {
+  animation: fault-flash 1.2s ease-in-out infinite;
+}
+
+@keyframes fault-flash {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(246, 201, 69, 0.8), 0 0 12px rgba(246, 201, 69, 0.5), inset 0 0 4px rgba(246, 201, 69, 0.3);
+    border-color: rgba(246, 201, 69, 0.9);
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+  50% {
+    box-shadow: 0 0 2px rgba(246, 201, 69, 0.3), 0 0 4px rgba(246, 201, 69, 0.15), inset 0 0 1px rgba(246, 201, 69, 0.1);
+    border-color: rgba(246, 201, 69, 0.2);
+    opacity: 0.55;
+    filter: brightness(0.6);
+  }
+}
+
+/* ── Fire alert flash animation ─────────────────────────────────────── */
+.fire-flash {
+  animation: fire-flash 1s ease-in-out infinite;
+}
+
+/* Image alerts flash along the transparent silhouette rather than their rectangular box. */
+img.fire-flash {
+  animation-name: fire-outline-flash;
+}
+
+@keyframes fire-outline-flash {
+  0%, 100% {
+    filter: drop-shadow(0 0 1px rgba(255, 70, 104, 1)) drop-shadow(0 0 8px rgba(255, 70, 104, 0.9));
+  }
+  50% {
+    filter: drop-shadow(0 0 1px rgba(255, 70, 104, 0.15)) drop-shadow(0 0 2px rgba(255, 70, 104, 0.1));
+  }
+}
+
+/* Enhance only the iPad icon glow; keep the original flash timing and size. */
+img.fire-flash.fire-flash--ipad-glow {
+  animation-name: ipad-fire-outline-glow;
+}
+
+@keyframes ipad-fire-outline-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(255, 70, 104, 1)) drop-shadow(0 0 10px rgba(255, 40, 70, 0.95)) drop-shadow(0 0 20px rgba(255, 40, 70, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 1px rgba(255, 70, 104, 0.3)) drop-shadow(0 0 4px rgba(255, 40, 70, 0.2)) drop-shadow(0 0 8px rgba(255, 40, 70, 0.1));
+  }
+}
+
+@keyframes fire-flash {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 70, 104, 1), 0 0 24px rgba(255, 70, 104, 0.8), 0 0 40px rgba(255, 70, 104, 0.4), inset 0 0 10px rgba(255, 70, 104, 0.5);
+    border-color: rgba(255, 70, 104, 1);
+    border-width: 2px;
+  }
+  50% {
+    box-shadow: 0 0 4px rgba(255, 70, 104, 0.4), 0 0 8px rgba(255, 70, 104, 0.2), inset 0 0 3px rgba(255, 70, 104, 0.15);
+    border-color: rgba(255, 70, 104, 0.4);
+    border-width: 1px;
+  }
+}
+
+.fire-icon-pulse {
+  animation: fire-icon-pulse 1s ease-in-out infinite;
+}
+
+@keyframes fire-icon-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(255, 70, 104, 0.9)) drop-shadow(0 0 14px rgba(255, 70, 104, 0.6));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 2px rgba(255, 70, 104, 0.3));
+    transform: scale(0.92);
+  }
+}
+
+/* ── Leaflet map pin styles ─────────────────────────────────────────── */
+.leaflet-container {
+  background: #0f172a !important;
+  font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+}
+
+.leaflet-pin-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-pin-dot {
+  border-radius: 50%;
+  border: 2px solid #0f172a;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.leaflet-pin-wrapper:hover .leaflet-pin-dot {
+  transform: scale(1.5);
+}
+
+.leaflet-pin-dot.leaflet-pin-flash {
+  animation: pin-flash 0.8s ease-in-out infinite;
+}
+
+@keyframes pin-flash {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.15); }
+}
+
+.leaflet-pin-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  border: 2px solid;
+  opacity: 0.5;
+  animation: pin-ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes pin-ring-pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.3); opacity: 0; }
+}
+
+.leaflet-pin-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: pin-glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes pin-glow-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Dark theme overrides for Leaflet controls */
+.leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.7) !important;
+  color: #6b7280 !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a {
+  color: #9ca3af !important;
+}
+.leaflet-control-zoom a {
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #e5e7eb !important;
+  border-color: rgba(55, 65, 81, 0.6) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(31, 41, 55, 0.95) !important;
+}
+
+/* CARTO dark_all tiles are near-pure-black for land and sea. Use a strong
+   filter chain on the tile pane only (markers/overlays are unaffected):
+   1. brightness lifts the black to visible gray
+   2. sepia converts to warm tones that are easy to recolor
+   3. hue-rotate shifts everything into the blue family
+   4. saturate boosts the blue so land vs sea is clearly distinguishable
+   5. contrast keeps street/label detail crisp */
+.omni-dark-map .leaflet-tile-pane {
+  filter: brightness(1.8) sepia(1) hue-rotate(190deg) saturate(1.8) contrast(1.1);
+}
+
+/* Container background stays in the navy-blue family. */
+.omni-dark-map .leaflet-container {
+  background: #020d25;
+}
+
+/* Light blue wash that further unifies the map with the page and adds a
+   subtle luminosity to the centre. Uses screen blend so it only brightens. */
+.omni-blue-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: rgba(10, 40, 90, 0.3);
+  mix-blend-mode: screen;
+}
+
+.omni-blue-tint::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(30, 90, 170, 0.2), transparent 70%);
+  mix-blend-mode: screen;
+}
+
+/* Feathered edge fade that BRIGHTENS the map edges into the surrounding
+   page blue (#052b5c), instead of darkening them. Uses screen blend mode
+   so the rectangular tile boundary dissolves outward into the page. */
+.omni-edge-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 201;
+  pointer-events: none;
+  border-radius: 16px;
+  background:
+    linear-gradient(to right,
+      rgba(5, 43, 92, 0.95) 0%,
+      rgba(5, 43, 92, 0.6) 4%,
+      rgba(5, 43, 92, 0.2) 8%,
+      transparent 14%,
+      transparent 86%,
+      rgba(5, 43, 92, 0.2) 92%,
+      rgba(5, 43, 92, 0.6) 96%,
+      rgba(5, 43, 92, 0.95) 100%),
+    linear-gradient(to bottom,
+      rgba(5, 43, 92, 0.95) 0%,
+      rgba(5, 43, 92, 0.6) 4%,
+      rgba(5, 43, 92, 0.2) 8%,
+      transparent 14%,
+      transparent 86%,
+      rgba(5, 43, 92, 0.2) 92%,
+      rgba(5, 43, 92, 0.6) 96%,
+      rgba(5, 43, 92, 0.95) 100%);
+  mix-blend-mode: screen;
+}
