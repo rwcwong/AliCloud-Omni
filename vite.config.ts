@@ -2,9 +2,9 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 
-const restTarget = 'http://8.217.182.207:8888';
-const wsNode1Target = 'ws://8.217.182.207:8081';
-const wsNode2Target = 'ws://8.217.182.207:8082';
+const restTarget = 'http://47.76.120.26:8888';
+const wsNode1Target = 'ws://47.76.120.26:8081';
+const wsNode2Target = 'ws://47.76.120.26:8082';
 
 const proxy = {
   '/static': { target: restTarget, changeOrigin: true },

@@ -151,6 +151,6 @@ check('Production builds restore the same mode-specific reference configuration'
   const config = configure({}, { VITE_CARTO_API_KEY: 'production-test-key' }, 'production');
   assert.ok(envReads.every(call => call.mode === 'production'));
   assert.equal(config.define['import.meta.env.VITE_CARTO_API_KEY'], JSON.stringify('production-test-key'));
-  assert.equal(config.server.proxy['/api'].target, 'http://8.217.182.207:8888');
+  assert.equal(config.server.proxy['/api'].target, 'http://47.76.120.26:8888');
 });
 console.log(`\n${checks} map-reference checks passed. Real CARTO rendering still requires an authorized key.`);
