@@ -371,6 +371,9 @@ export const translations: Record<Language, Record<string, string>> = {
     login_submitted_desc: '您的帳戶申請已發送。管理員將審核並批准您的存取權限。',
     login_approved_desc: '帳戶批准後您即可登入。',
     login_pw_min_8: '密碼至少需要 8 個字符。',
+    login_demo_mode: '演示模式',
+    login_demo_desc: '無需連接後端即可瀏覽介面',
+    demo_mode_badge: '演示模式',
     // Change password
     cp_title: '更改密碼',
     cp_current_pw: '目前密碼',
@@ -1311,6 +1314,9 @@ export const translations: Record<Language, Record<string, string>> = {
     login_submitted_desc: '您的帐户申请已发送。管理员将审核并批准您的存取权限。',
     login_approved_desc: '帐户批准后您即可登录。',
     login_pw_min_8: '密码至少需要 8 个字符。',
+    login_demo_mode: '演示模式',
+    login_demo_desc: '无需连接后端即可浏览界面',
+    demo_mode_badge: '演示模式',
     // Change password
     cp_title: '更改密码',
     cp_current_pw: '当前密码',
@@ -2251,6 +2257,9 @@ export const translations: Record<Language, Record<string, string>> = {
     login_submitted_desc: 'Your account request has been sent. An administrator will review and approve your access.',
     login_approved_desc: 'You will be able to log in once your account is approved.',
     login_pw_min_8: 'Password must be at least 8 characters.',
+    login_demo_mode: 'Demo Mode',
+    login_demo_desc: 'Explore the interface without a live backend',
+    demo_mode_badge: 'Demo Mode',
     // Change password
     cp_title: 'Change Password',
     cp_current_pw: 'Current Password',

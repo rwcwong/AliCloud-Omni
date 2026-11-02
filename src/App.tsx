@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { LangProvider } from './lib/i18n';
 import { TransportProvider } from './transport/TransportContext';
 import { AuthProvider, useAuth, isGlobalAdmin } from './lib/auth';
+import { useT } from './lib/i18n';
 import { ScenarioSwitcher } from './scenarios/ScenarioSwitcher';
 import { LoginPage } from './scenarios/LoginPage';
 import { Scenario, Theme } from './types';
@@ -26,6 +27,18 @@ const LoadingSpinner = () => (
     <div className="w-6 h-6 border-2 border-red-500/40 border-t-red-500 rounded-full animate-spin" />
   </div>
 );
+
+function DemoBadge() {
+  const { isDemo } = useAuth();
+  const t = useT();
+  if (!isDemo) return null;
+  return (
+    <div className="fixed top-3 right-3 z-[300] flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/15 px-3 py-1 text-xs font-medium text-amber-300 backdrop-blur-sm shadow-lg pointer-events-none">
+      <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+      {t('demo_mode_badge')}
+    </div>
+  );
+}
 
 function AppInner() {
   const { session, loading, role, siteRoles, user, signOut } = useAuth();
@@ -318,6 +331,7 @@ function AppInner() {
           onThemeToggle={canToggleTheme && scenario !== 'omni' && scenario !== 'omni_ipad' && scenario !== 'overview_3d' && scenario !== 'building_dashboard' && scenario !== 'block_dashboard' && scenario !== 'system_management' ? () => setTheme(t => t === 'dark' ? 'light' : 'dark') : undefined}
         />
         <ScreenshotToast />
+        <DemoBadge />
       </div>
     </TransportProvider>
   );

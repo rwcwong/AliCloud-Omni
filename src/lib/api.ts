@@ -52,6 +52,7 @@ export interface ApiSession {
   expires_at?: number;
   user: ApiUser;
   user_info: ApiUserInfo;
+  demo?: boolean;
 }
 
 export interface ClientError {
@@ -129,6 +130,10 @@ function loadStoredSession(): ApiSession | null {
 let currentSession: ApiSession | null = loadStoredSession();
 const authListeners = new Set<AuthChangeListener>();
 
+export function isDemoSession(): boolean {
+  return currentSession?.demo === true;
+}
+
 function saveSession(session: ApiSession | null, event: AuthChangeEvent) {
   currentSession = session;
   if (typeof window !== 'undefined') {
@@ -178,7 +183,7 @@ function httpErrorMessage(response: Response, body: unknown): string {
 async function request<T>(path: string, init: RequestInit = {}, authenticated = true): Promise<T> {
   try { return await requestInternal<T>(path, init, authenticated); }
   catch (error) {
-    if (authenticated && typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('omnios:api-error', {
+    if (authenticated && !isDemoSession() && typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('omnios:api-error', {
       detail: { message: error instanceof Error ? error.message : 'API request failed' },
     }));
     throw error;
@@ -186,6 +191,9 @@ async function request<T>(path: string, init: RequestInit = {}, authenticated = 
 }
 
 async function requestInternal<T>(path: string, init: RequestInit = {}, authenticated = true): Promise<T> {
+  if (isDemoSession()) {
+    throw new ApiRequestError('Demo mode — no live backend connected.', 0);
+  }
   const requestToken = currentSession?.access_token;
   if (authenticated && currentSession?.expires_at && currentSession.expires_at * 1000 <= Date.now()) {
     saveSession(null, 'SIGNED_OUT');
@@ -415,6 +423,30 @@ export const api = {
       } catch (error) {
         return { data: { session: null, user: null }, error: toClientError(error) };
       }
+    },
+
+    async signInDemo() {
+      const demoSession: ApiSession = {
+        access_token: 'demo-token',
+        token_type: 'bearer',
+        expires_at: undefined,
+        demo: true,
+        user_info: {
+          username: 'demo_admin',
+          real_name: 'Demo Administrator',
+          role: 'admin',
+          project_code: null,
+          site_code: null,
+        },
+        user: {
+          id: 'demo_admin',
+          email: 'demo_admin',
+          role: 'authenticated',
+          user_metadata: { name: 'Demo Administrator', telephone: '' },
+        },
+      };
+      saveSession(demoSession, 'SIGNED_IN');
+      return { data: { session: demoSession, user: demoSession.user }, error: null };
     },
 
     async signOut() {

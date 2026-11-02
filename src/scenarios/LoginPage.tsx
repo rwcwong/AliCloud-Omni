@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, Eye, EyeOff, AlertCircle, CheckCircle2, Phone, User, Mail, Lock, ArrowLeft, Monitor, Tablet } from 'lucide-react';
+import { Shield, Eye, EyeOff, AlertCircle, CheckCircle2, Phone, User, Mail, Lock, ArrowLeft, Monitor, Tablet, Sparkles } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { useT, useLang } from '../lib/i18n';
 
@@ -7,7 +7,7 @@ type View = 'login' | 'register' | 'submitted';
 type Platform = 'pc' | 'ipad';
 
 export function LoginPage({ onLoginPlatform }: { onLoginPlatform?: (platform: Platform) => void }) {
-  const { signIn, registerRequest } = useAuth();
+  const { signIn, signInDemo, registerRequest } = useAuth();
   const t = useT();
   const { lang } = useLang();
   const [view, setView] = useState<View>('login');
@@ -19,6 +19,7 @@ export function LoginPage({ onLoginPlatform }: { onLoginPlatform?: (platform: Pl
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loginLoading, setLoginLoading] = useState(false);
   const [platform, setPlatform] = useState<Platform>('pc');
+  const [demoLoading, setDemoLoading] = useState(false);
 
   // Register state
   const [regName, setRegName] = useState('');
@@ -39,6 +40,17 @@ export function LoginPage({ onLoginPlatform }: { onLoginPlatform?: (platform: Pl
     if (err) {
       setLoginError(err);
       setLoginLoading(false);
+    }
+  }
+
+  async function handleDemo() {
+    setLoginError(null);
+    setDemoLoading(true);
+    onLoginPlatform?.(platform);
+    const { error: err } = await signInDemo();
+    if (err) {
+      setLoginError(err);
+      setDemoLoading(false);
     }
   }
 
@@ -177,6 +189,21 @@ export function LoginPage({ onLoginPlatform }: { onLoginPlatform?: (platform: Pl
                     ? '账号由管理员创建。'
                     : '帳號由管理員建立。'}
               </p>
+
+              <div className="mt-4 pt-4 border-t border-gray-800/60">
+                <button
+                  type="button"
+                  onClick={handleDemo}
+                  disabled={demoLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-gray-800/60 hover:bg-gray-700/60 border border-gray-700/60 hover:border-cyan-500/40 text-gray-300 hover:text-cyan-200 font-medium text-sm rounded-xl py-2.5 transition-all disabled:opacity-50"
+                >
+                  <Sparkles size={14} />
+                  {demoLoading ? (lang === 'en' ? 'Loading…' : lang === 'zh-CN' ? '加载中…' : '載入中…') : t('login_demo_mode')}
+                </button>
+                <p className="mt-2 text-center text-xs text-gray-500">
+                  {t('login_demo_desc')}
+                </p>
+              </div>
 
               <p className="text-center text-xs text-white mt-4">
                 Century Harvest Technologies Limited

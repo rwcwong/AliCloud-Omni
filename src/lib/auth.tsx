@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { api, type ApiSession, type ApiUser } from './api';
+import { api, isDemoSession, type ApiSession, type ApiUser } from './api';
 import { UserRole } from '../types';
 import { SiteWithBuildings as SWB } from '../hooks/useSiteSelector';
 
@@ -36,7 +36,9 @@ interface AuthContextValue {
   canAccessProject: (projectId: string, sites: SWB[]) => boolean;
   canSeeOverall: () => boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signInDemo: () => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+  isDemo: boolean;
   registerRequest: (name: string, email: string, password: string, telephone: string) => Promise<{ error: string | null }>;
 }
 
@@ -51,7 +53,9 @@ const AuthContext = createContext<AuthContextValue>({
   canAccessProject: () => false,
   canSeeOverall: () => false,
   signIn: async () => ({ error: null }),
+  signInDemo: async () => ({ error: null }),
   signOut: async () => {},
+  isDemo: false,
   registerRequest: async () => ({ error: null }),
 });
 
@@ -61,10 +65,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [siteRoles, setSiteRoles] = useState<Record<string, UserRole>>({});
   const [role, setRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemo, setIsDemo] = useState(false);
 
   async function applyAccess(nextSession: ApiSession | null) {
     setSession(nextSession);
     setUser(nextSession?.user ?? null);
+    setIsDemo(nextSession?.demo === true);
     if (!nextSession) {
       setSiteRoles({});
       setRole(null);
@@ -77,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const map: Record<string, UserRole> = {};
     if (info.role === 'officer' && info.project_code && info.site_code) {
       map[`${info.project_code}::${info.site_code}`] = mappedRole;
-    } else if (info.role === 'executive' && info.project_code) {
+    } else if (info.role === 'executive' && info.project_code && !nextSession.demo) {
       try {
         const response = await api.getProjectSites(info.project_code);
         response.sites.forEach(site => { map[`${info.project_code}::${site.site_code}`] = mappedRole; });
@@ -130,6 +136,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   }
 
+  async function signInDemo() {
+    const { error } = await api.auth.signInDemo();
+    if (error) return { error: error.message };
+    return { error: null };
+  }
+
   async function signOut() {
     await api.auth.signOut();
   }
@@ -139,7 +151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, user, role, siteRoles, loading, getRoleForSite, canAccessSite, canAccessProject, canSeeOverall, signIn, signOut, registerRequest }}>
+    <AuthContext.Provider value={{ session, user, role, siteRoles, loading, getRoleForSite, canAccessSite, canAccessProject, canSeeOverall, signIn, signInDemo, signOut, isDemo, registerRequest }}>
       {children}
     </AuthContext.Provider>
   );
