@@ -886,8 +886,8 @@ export function OmniOSHome({ onSystemManagement, onAdminConsole, onNavigateDashb
           {/* Right column — performance score + alarms */}
           <div className="relative flex min-h-0 flex-col gap-2 lg:flex-1">
             <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between py-1 pl-1">
-                <DevicesUtilizationGauge rate={distribution?.total ? onlinePercent : null} size={96} style={{ marginLeft: 10, marginTop: 20 }} />
+              <div className="flex items-start justify-between py-1 pl-1">
+                <DevicesUtilizationGauge rate={distribution?.total ? onlinePercent : null} size={96} />
                 <PerformanceScore reportedScore={primaryProject?.health_score}
                   devices={allDevices}
                   alarms={projectAlarms}

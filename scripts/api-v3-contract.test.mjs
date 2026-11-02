@@ -245,21 +245,21 @@ test('statistics use actual Alarm/Fault buckets and missing endpoints remain emp
   assert.equal(h.requests.length, count);
 });
 
-test('dual WebSockets deduplicate identical frames, retain changed readings, reconnect at 5s and heartbeat at 25s', async () => {
+test('WebSocket deduplicates identical frames, retains changed readings, reconnects at 5s and heartbeats at 25s', async () => {
   const h = harness(); await h.login();
   const { WebSocketTransport } = h.load('src/transport/WebSocketTransport.ts');
   const transport = new WebSocketTransport(); const signals = [];
   transport.subscribe('test', signal => signals.push(signal));
-  assert.equal(h.Socket.instances.length, 2);
-  const [first, second] = h.Socket.instances; first.open(); second.open();
+  assert.equal(h.Socket.instances.length, 1);
+  const [first] = h.Socket.instances; first.open();
   const frame = { type: 'device_status_change', data: { device_id: 'D', status: 2, current_value: 0, timestamp: '2026-10-22T11:00:00' } };
-  first.message(frame); second.message(frame); assert.equal(signals.length, 1);
-  second.message({ ...frame, data: { ...frame.data, current_value: 1 } }); assert.equal(signals.length, 2);
+  first.message(frame); first.message(frame); assert.equal(signals.length, 1);
+  first.message({ ...frame, data: { ...frame.data, current_value: 1 } }); assert.equal(signals.length, 2);
   assert.equal(signals[0].value, 0); assert.equal(signals[0].batteryValue, undefined);
   assert.ok(h.timers.some(timer => timer.interval && timer.delay === 25_000));
   first.close(); assert.ok(h.timers.some(timer => timer.delay === 5_000));
   transport.destroy();
   const before = signals.length; first.message(frame); assert.equal(signals.length, before);
-  transport.subscribe('remount', signal => signals.push(signal)); assert.equal(h.Socket.instances.length, 4);
+  transport.subscribe('remount', signal => signals.push(signal)); assert.equal(h.Socket.instances.length, 2);
   transport.destroy();
 });

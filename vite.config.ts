@@ -3,8 +3,7 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 
 const restTarget = 'http://47.76.120.26:8888';
-const wsNode1Target = 'ws://47.76.120.26:8081';
-const wsNode2Target = 'ws://47.76.120.26:8082';
+const wsNode1Target = 'ws://47.76.120.26:8888';
 
 const proxy = {
   '/static': { target: restTarget, changeOrigin: true },
@@ -17,12 +16,6 @@ const proxy = {
     changeOrigin: true,
     ws: true,
     rewrite: (path: string) => path.replace(/^\/omnios-ws-node-1/, ''),
-  },
-  '/omnios-ws-node-2': {
-    target: wsNode2Target,
-    changeOrigin: true,
-    ws: true,
-    rewrite: (path: string) => path.replace(/^\/omnios-ws-node-2/, ''),
   },
 };
 

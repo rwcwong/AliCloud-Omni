@@ -34,7 +34,6 @@ function sameOriginWebSocketUrl(path: string): string {
 
 export const API_WEBSOCKET_URLS = [
   import.meta.env.VITE_API_WS_NODE_1 || sameOriginWebSocketUrl('/omnios-ws-node-1/api/v1/ws/iot-stream'),
-  import.meta.env.VITE_API_WS_NODE_2 || sameOriginWebSocketUrl('/omnios-ws-node-2/api/v1/ws/iot-stream'),
 ].filter((value, index, values) => value && values.indexOf(value) === index);
 
 export interface ApiUser {

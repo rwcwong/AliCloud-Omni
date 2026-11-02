@@ -290,7 +290,7 @@ const BUILDING_FIXED_WIDTH = 180;
 
 function TroubleBuildingsView({
   buildings, floorsByBuilding, floorHealthMap, activeAlarmFloorIds, nonActiveAlarmFloorIds, activeFaultFloorIds, faultOnlyFloorIds, fireAlarmFloorIds, selectedBuildingId, onSelectBuilding, onOpenFloor, lang,
-  totalBuildingCount, containerWidth,
+  totalBuildingCount, containerWidth, showAllBuildings,
 }: {
   buildings: BuildingInfo[];
   floorsByBuilding: Map<string, Floor[]>;
@@ -306,13 +306,16 @@ function TroubleBuildingsView({
   lang: string;
   totalBuildingCount: number;
   containerWidth: number;
+  showAllBuildings: boolean;
 }) {
   if (buildings.length === 0) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-cyan-100/40">
           <Building2 size={48} className="opacity-30" />
-          <span className="text-sm">{lang === 'en' ? 'All buildings normal' : lang === 'zh-CN' ? '所有大厦正常' : '所有大廈正常'}</span>
+          <span className="text-sm">{showAllBuildings
+            ? (lang === 'en' ? 'No buildings' : lang === 'zh-CN' ? '暂无大厦' : '暫無大廈')
+            : (lang === 'en' ? 'All buildings normal' : lang === 'zh-CN' ? '所有大厦正常' : '所有大廈正常')}</span>
         </div>
       </div>
     );
@@ -327,7 +330,7 @@ function TroubleBuildingsView({
 
   return (
     <div
-      className="flex h-full items-stretch justify-center p-1"
+      className="flex h-full min-w-full w-max items-stretch justify-center p-1"
       style={{ gap: `${gap}px` }}
     >
       {buildings.map(info => {
@@ -425,6 +428,7 @@ export function BuildingDashboard({
   const { devices } = useDevices();
   const { alarms } = useAlarms();
   const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
+  const [showAllBuildings, setShowAllBuildings] = useState(false);
   const { data: buildings } = useApiQuery('dashboard:buildings:' + siteId, async () =>
     (await apiData.buildings()).filter(building => building.site_id === siteId), [] as Building[]);
   const { data: allFloors } = useApiQuery('dashboard:floors:' + siteId, async () =>
@@ -520,6 +524,8 @@ export function BuildingDashboard({
     const status: BuildingStatus = alarmCount > 0 ? 'critical' : faultCount > 0 ? 'warning' : offlineCount === bldgDevices.length && bldgDevices.length > 0 ? 'offline' : 'normal';
     return { building, deviceCount: bldgDevices.length, onlineCount: bldgDevices.length - offlineCount, alarmCount, faultCount, offlineCount, normalCount, status };
   }), [buildings, devices, deviceAlarmSeverityMap]);
+  const troubleBuildings = buildingInfos.filter(b => b.status !== 'normal');
+  const displayedBuildings = showAllBuildings ? buildingInfos : troubleBuildings;
 
   const floorsByBuilding = useMemo(() => {
     const map = new Map<string, Floor[]>();
@@ -805,15 +811,22 @@ export function BuildingDashboard({
                   </div>
                 </div>
               )}
-              <div className="flex items-center gap-2 border-b border-cyan-300/10 px-3 py-2">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-cyan-300/10 px-3 py-2">
                 <PanelHeading icon={AlertTriangle}>
-                  {lang === 'en' ? 'Trouble Buildings' : lang === 'zh-CN' ? '异常大厦' : '異常大廈'}
-                  <span className="ml-2 text-white/60">{buildingInfos.filter(b => b.status !== 'normal').length}</span>
+                  {showAllBuildings
+                    ? (lang === 'en' ? 'All Buildings' : lang === 'zh-CN' ? '所有大厦' : '所有大廈')
+                    : (lang === 'en' ? 'Trouble Buildings' : lang === 'zh-CN' ? '异常大厦' : '異常大廈')}
+                  <span className="ml-2 text-white/60">{displayedBuildings.length}</span>
                 </PanelHeading>
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-cyan-100/70">
+                  <span>{lang === 'en' ? 'Show all buildings' : lang === 'zh-CN' ? '显示所有大厦' : '顯示所有大廈'}</span>
+                  <input type="checkbox" className="peer sr-only" checked={showAllBuildings} onChange={event => setShowAllBuildings(event.target.checked)} />
+                  <span aria-hidden="true" className="relative h-5 w-9 rounded-full border border-cyan-300/30 bg-slate-700 transition-colors peer-checked:bg-cyan-500 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-cyan-300 after:absolute after:left-0.5 after:top-0.5 after:h-3.5 after:w-3.5 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-4" />
+                </label>
               </div>
-              <div className="min-h-0 flex-1 overflow-hidden p-1">
+              <div className="min-h-0 flex-1 overflow-auto p-1">
                 <TroubleBuildingsView
-                  buildings={buildingInfos.filter(b => b.status !== 'normal')}
+                  buildings={displayedBuildings}
                   floorsByBuilding={floorsByBuilding}
                   floorHealthMap={floorHealthMap}
                   activeAlarmFloorIds={activeAlarmFloorIds}
@@ -827,6 +840,7 @@ export function BuildingDashboard({
                   lang={lang}
                   totalBuildingCount={buildingInfos.length}
                   containerWidth={rightColumnWidth}
+                  showAllBuildings={showAllBuildings}
                 />
               </div>
             </GlassPanel>
